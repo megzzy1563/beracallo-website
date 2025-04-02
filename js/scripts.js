@@ -85,3 +85,50 @@
         // Trigger scroll once to initialize animations
         window.dispatchEvent(new Event('scroll'));
     });
+
+
+    // Initialize videos when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM fully loaded - initializing videos');
+    
+    // Get all video elements
+    const videos = document.querySelectorAll('video');
+    console.log(`Found ${videos.length} video elements`);
+    
+    videos.forEach((video, index) => {
+        console.log(`Initializing video ${index + 1}`);
+        
+        // Force videos to load
+        video.load();
+        
+        // Handle loading indicator
+        const videoContainer = video.closest('.video-container');
+        if (videoContainer) {
+            // Check if loading indicator already exists
+            let loadingIndicator = videoContainer.querySelector('.video-loading');
+            
+            if (!loadingIndicator) {
+                loadingIndicator = document.createElement('div');
+                loadingIndicator.className = 'video-loading';
+                loadingIndicator.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                videoContainer.appendChild(loadingIndicator);
+            }
+            
+            // Add event listeners
+            video.addEventListener('canplay', function() {
+                console.log(`Video ${index + 1} can play now`);
+                if (loadingIndicator) {
+                    loadingIndicator.style.display = 'none';
+                }
+            });
+            
+            video.addEventListener('error', function(e) {
+                console.error(`Error with video ${index + 1}:`, e);
+                if (loadingIndicator) {
+                    loadingIndicator.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error';
+                }
+            });
+        }
+    });
+});
+
