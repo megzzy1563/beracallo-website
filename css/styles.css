@@ -487,9 +487,11 @@ section {
 
 
 .project-img {
-    width: fit-content;
-    height: 350px;
+    width: 100%;
+    height: auto !important;
+    max-height: 350px !important;
     position: relative;
+    overflow: hidden;
 }
 
 .project-img-placeholder {
@@ -1239,15 +1241,19 @@ video::-webkit-media-controls-panel {
 /* Fix for project images on mobile */
 .project-img {
     width: 100%;
-    height: auto;
+    height: auto !important;
+    max-height: 350px !important;
     position: relative;
     overflow: hidden;
 }
+
 .project-img img {
     width: 100%;
-    height: auto;
-    object-fit: cover;
+    height: auto !important;
+    max-height: 350px !important;
+    object-fit: contain !important;
 }
+
 /* Mobile menu improvements */
 @media (max-width: 768px) {
     nav {
@@ -1359,4 +1365,10 @@ video::-webkit-media-controls-panel {
     .service {
         padding: 2rem 1.5rem;
     }
+}
+
+.projects-grid .project:first-child .project-img,
+.projects-grid .project:first-child .project-img img {
+    max-height: 350px !important;
+    object-position: top;
 }
