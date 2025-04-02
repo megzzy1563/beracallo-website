@@ -181,3 +181,111 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+// Add this code to your existing scripts.js
+
+// Mobile menu close button functionality
+const mobileMenuCloseBtn = document.querySelector('.mobile-menu-close');
+if (mobileMenuCloseBtn) {
+    mobileMenuCloseBtn.addEventListener('click', () => {
+        nav.classList.remove('active');
+    });
+}
+
+// Close mobile menu when clicking outside
+document.addEventListener('click', (e) => {
+    if (nav.classList.contains('active') && 
+        !nav.contains(e.target) && 
+        e.target !== mobileMenuBtn &&
+        !mobileMenuBtn.contains(e.target)) {
+        nav.classList.remove('active');
+    }
+});
+
+// Handle touch events for better mobile experience
+document.addEventListener('touchstart', handleTouchStart, false);
+document.addEventListener('touchmove', handleTouchMove, false);
+
+let xDown = null;
+let yDown = null;
+
+function handleTouchStart(evt) {
+    xDown = evt.touches[0].clientX;
+    yDown = evt.touches[0].clientY;
+}
+
+function handleTouchMove(evt) {
+    if (!xDown || !yDown) {
+        return;
+    }
+
+    const xUp = evt.touches[0].clientX;
+    const yUp = evt.touches[0].clientY;
+
+    const xDiff = xDown - xUp;
+    const yDiff = yDown - yUp;
+
+    // Determine if it's a horizontal swipe (left or right)
+    if (Math.abs(xDiff) > Math.abs(yDiff)) {
+        if (xDiff > 0) {
+            // Swiped left, close menu
+            if (nav.classList.contains('active')) {
+                nav.classList.remove('active');
+            }
+        } else {
+            // Swiped right, open menu if near edge
+            if (!nav.classList.contains('active') && xDown < 50) {
+                nav.classList.add('active');
+            }
+        }
+    }
+
+    // Reset values
+    xDown = null;
+    yDown = null;
+}
+
+// Fix for project images on mobile
+window.addEventListener('DOMContentLoaded', () => {
+    const projectImages = document.querySelectorAll('.project-img img');
+    
+    projectImages.forEach(img => {
+        // Remove inline width that might be causing issues
+        if (img.style.width) {
+            img.style.removeProperty('width');
+            img.parentElement.classList.add('fixed-img');
+        }
+    });
+});
+
+// Optimize video loading on mobile
+function optimizeVideoForMobile() {
+    const videos = document.querySelectorAll('video');
+    const isMobile = window.innerWidth <= 768;
+    
+    videos.forEach(video => {
+        if (isMobile) {
+            // Set lower quality for mobile devices
+            video.setAttribute('playsinline', '');
+            
+            // Only load video when in viewport on mobile
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        video.load();
+                        if (video.hasAttribute('autoplay')) {
+                            video.play().catch(e => console.log('Autoplay prevented:', e));
+                        }
+                        observer.unobserve(video);
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            observer.observe(video);
+        }
+    });
+}
+
+// Call on load and resize
+window.addEventListener('DOMContentLoaded', optimizeVideoForMobile);
+window.addEventListener('resize', optimizeVideoForMobile);
