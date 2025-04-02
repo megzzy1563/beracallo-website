@@ -84,6 +84,7 @@ header.scrolled {
     margin-left: 5px;
 }
 
+
 nav ul {
     display: flex;
     list-style: none;
@@ -268,6 +269,8 @@ section {
 }
 
 /* About Section */
+
+
 .about-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -325,7 +328,7 @@ section {
 
 .about-image {
     position: relative;
-    height: 450px;
+    height: 500px;
     width: 100%;
     overflow: hidden;
     border-radius: 10px;
@@ -334,7 +337,7 @@ section {
 
 .about-image img{
     position: relative;
-    height: 450px;
+    height: 100%;
     width: 100%;
     overflow: hidden;
     border-radius: 10px;
@@ -455,13 +458,33 @@ section {
     position: relative;
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    transition: transform 0.4s ease;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    will-change: transform;
 }
 
 .project:hover {
-    transform: translateY(-10px);
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
+
+.project::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    transition: border-color 0.3s ease;
+    pointer-events: none;
+}
+
+.project:hover::after {
+    border-color: var(--accent-color);
+}
+
 
 .project-img {
     width: fit-content;
@@ -480,9 +503,13 @@ section {
     font-size: 1.2rem;
 }
 
+/* Subtle animation for project content on hover */
 .project-content {
-    padding: 2rem;
-    background-color: var(--card-bg);
+    transition: padding 0.3s ease;
+}
+
+.project:hover .project-content {
+    padding: 2.1rem 2rem 1.9rem;
 }
 
 .project-content h3 {
@@ -1060,13 +1087,12 @@ footer {
 }
 
 .video-container {
-    width: 100%;
+    width: 105%;
     position: relative;
     overflow: hidden;
     border-radius: 10px 10px 0 0;
     aspect-ratio: 16 / 9;
 }
-
 
 
 .video-content {
@@ -1133,3 +1159,46 @@ video::-webkit-media-controls-panel {
     transform: translateX(5px);
 }
 
+/* Form message styles */
+.form-message {
+    padding: 1rem;
+    margin-top: 1.5rem;
+    border-radius: 5px;
+    font-weight: 500;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.form-message.success {
+    background-color: rgba(39, 174, 96, 0.1);
+    color: #27ae60;
+    border-left: 3px solid #27ae60;
+}
+
+.form-message.error {
+    background-color: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+    border-left: 3px solid #e74c3c;
+}
+
+/* Styling for the submit button states */
+.submit-btn:disabled {
+    background-color: #7f85a7;
+    cursor: not-allowed;
+}
+
+/* Form validation styling */
+.form-control:invalid:focus {
+    border: 1px solid rgba(231, 76, 60, 0.5);
+}
+
+/* Loading animation for button */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.submit-btn:disabled {
+    animation: pulse 1.5s infinite;
+}
